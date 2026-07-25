@@ -168,6 +168,13 @@
     var MATE = 100000;
     var CACHE_KEY = 'ycp.puzzles.v1';
     var USER_KEY = 'ycp.lastuser.v1';
+    // Derived from our own path (…/puzzles/…) so suite links work whether
+    // this is served from the origin root or a sub-path like /yourlines/
+    // (GitHub Pages project site).
+    var SUITE_BASE = (function () {
+      var i = location.pathname.indexOf('/puzzles/');
+      return i >= 0 ? location.pathname.slice(0, i + 1) : '/';
+    })();
 
     function clampInt(v, lo, hi, dflt) { var n = parseInt(v, 10); if (!isFinite(n)) return dflt; return Math.max(lo, Math.min(hi, n)); }
     function $id(id) { return document.getElementById(id); }
@@ -616,7 +623,7 @@
         '<div style="margin-top:6px; color:var(--rose)">In the game you played <b>' + escapeHtml(playedSan) + '</b>, ' + playedTail + '</div>';
       $id('solText').innerHTML = html;
       // Play link carries the puzzle position; game link opens the source game.
-      var playHref = '/play/?fen=' + encodeURIComponent(p.fen);
+      var playHref = SUITE_BASE + 'play/?fen=' + encodeURIComponent(p.fen);
       $id('playLink').setAttribute('href', playHref);
       var gl = $id('gameLink');
       if (p.url) { gl.setAttribute('href', p.url); gl.classList.remove('hide'); } else { gl.classList.add('hide'); }
